@@ -1,0 +1,32 @@
+# segredos, estado e logs: nunca no repositorio (repo publico)
+client_secret.json
+token.json
+config.json
+config.toml
+state.json
+estado*.json
+gmud_state.json
+eventos.json
+*.log
+logs/
+backup/
+
+# versao antiga (substituida pelo pacote inatel_sync) e integracoes locais (GLPI)
+/sync_inatel.py
+/sync_moodle.py
+/sync_outlook.py
+/gmud_agenda.py
+/agenda.py
+/tarefas.py
+/agenda.cmd
+/tarefas.cmd
+local/
+
+# build e ambiente
+dist/
+build/
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+*.egg-info/
