@@ -55,14 +55,14 @@ def credenciais():
     return creds
 
 
-def autorizar():
+def autorizar(incluir_tarefas=True):
     """Abre o navegador para a pessoa autorizar e guarda o token no keyring."""
     from google_auth_oauthlib.flow import InstalledAppFlow
 
     arquivo = paths.client_secret()
     if not arquivo:
         raise ErroConfig("client_secret.json nao encontrado (deveria vir no pacote). Reinstale o inatel-sync.")
-    flow = InstalledAppFlow.from_client_secrets_file(str(arquivo), ESCOPOS)
+    flow = InstalledAppFlow.from_client_secrets_file(str(arquivo), ESCOPOS if incluir_tarefas else ESCOPOS[:1])
     creds = flow.run_local_server(
         port=0, prompt="consent", authorization_prompt_message="",
         success_message="Pronto! Pode fechar esta aba e voltar para a janela do inatel-sync.",

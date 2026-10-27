@@ -82,13 +82,29 @@ def cmd_status(args):
 
 # ---------------------------------------------------------------- auth / config
 
+def _cfg_opcional():
+    from inatel_sync.core import config
+    return config.carregar(exigir=False)
+
+
+def cmd_setup(args):
+    from inatel_sync import setup
+    return setup.assistente()
+
+
+def cmd_desinstalar(args):
+    from inatel_sync import desinstalar
+    return desinstalar.desinstalar(manter_dados=args.manter_dados, sim=args.sim)
+
+
 def cmd_auth(args):
     from inatel_sync.core import google
 
     print("Vai abrir o navegador para voce autorizar o acesso ao Google Agenda e ao Google Tasks.")
     print('Se aparecer "O Google nao verificou este app": clique em "Avancado" e depois em "Acessar ... (nao seguro)".')
     print("O inatel-sync pede so Agenda e Tasks; nada de e-mail, Drive ou contatos.")
-    google.autorizar()
+    cfg = _cfg_opcional()
+    google.autorizar(incluir_tarefas=cfg["cli"]["tarefas"])
     google.servico_agenda().calendarList().list(maxResults=1).execute()
     print("Google autorizado.")
     return 0
@@ -244,6 +260,11 @@ def _parser():
     sub.add_parser("status", help="ultima e proxima execucao de cada modulo").set_defaults(func=cmd_status)
     sub.add_parser("doctor", help="diagnostico").set_defaults(func=cmd_doctor)
     sub.add_parser("auth", help="autoriza o Google (abre o navegador)").set_defaults(func=cmd_auth)
+    sub.add_parser("setup", help="assistente de configuracao (pode rodar de novo)").set_defaults(func=cmd_setup)
+    d = sub.add_parser("desinstalar", help="remove tarefas, senhas guardadas e (opcional) os dados")
+    d.add_argument("--manter-dados", action="store_true", help="mantem config e estado para reinstalar depois")
+    d.add_argument("--sim", action="store_true", help="nao pergunta")
+    d.set_defaults(func=cmd_desinstalar)
 
     c = sub.add_parser("config", help="mostrar | senha | moodle-url [moodle|code] | set secao.chave valor | "
                                       "integracao <nome> on|off | importar <pasta da versao 1>")

@@ -33,6 +33,8 @@ build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
 packages = ["inatel_sync"]
+# o .gitignore tira client_secret.json; no wheel vai o do projeto publico, copiado pelo scripts/build.py
+artifacts = ["inatel_sync/dados/client_secret.json"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

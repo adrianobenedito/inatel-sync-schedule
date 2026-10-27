@@ -96,6 +96,12 @@ def remover(nome, pasta=PASTA):
     return _schtasks("/delete", "/tn", pasta + nome, "/f").returncode == 0
 
 
+def remover_pasta():
+    ps = ("$s = New-Object -ComObject Schedule.Service; $s.Connect(); "
+          "try { $s.GetFolder('\').DeleteFolder('inatel-sync', 0) } catch {}")
+    subprocess.run(["powershell", "-NoProfile", "-Command", ps], capture_output=True, creationflags=SEM_JANELA, timeout=60)
+
+
 def listar():
     """{nome: {proxima, ultima, resultado, estado}} das tarefas na pasta \\inatel-sync."""
     ps = ("Get-ScheduledTask -TaskPath '\\inatel-sync\\' -ErrorAction SilentlyContinue | ForEach-Object { "

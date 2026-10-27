@@ -139,9 +139,7 @@ class Moodle(Integracao):
             try:
                 itens = eventos_do_ics(baixar(fonte), prefixo, local, self.cor())
             except (ErroRede, ErroConfig) as e:
-                # Um Moodle fora nao impede o outro; os eventos dele ficam como estao.
-                self.log.warning("%s; os eventos dele ficam como estao", e)
-                falhas.append(e)
+                falhas.append(e)  # um Moodle fora nao impede o outro; os eventos dele ficam como estao
                 continue
             futuros = [i for i in itens if (i.ultimo_dia or i.dia) >= dia_hoje]
             self.log.info("%s: %d eventos no calendario, %d de hoje em diante", host, len(itens), len(futuros))
@@ -149,5 +147,9 @@ class Moodle(Integracao):
             if itens:  # calendario vazio pode ser erro do Moodle: nao apaga
                 prefixos.append(prefixo)
         if falhas and len(falhas) == len(self.opcoes.get("fontes", [])):
+            if len(falhas) > 1 and all(isinstance(e, ErroRede) for e in falhas):
+                raise ErroRede("nenhum Moodle respondeu (" + "; ".join(map(str, falhas)) + ")")
             raise falhas[0]
+        for e in falhas:
+            self.log.warning("%s; os eventos dele ficam como estao", e)
         return Coleta(eventos, tuple(prefixos))
