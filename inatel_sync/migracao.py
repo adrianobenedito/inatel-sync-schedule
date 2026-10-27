@@ -1,7 +1,8 @@
 """Importa uma instalacao da versao 1 (scripts soltos: config.json, state.json, token.json).
 
 As chaves e tags dos eventos nao mudaram, entao os eventos existentes continuam reconhecidos.
-Nada e apagado: o token.json vira token.json.migrado depois de ir para o keyring.
+Nada e apagado: o token.json vira token.json.migrado depois de ir para o keyring (so quando as
+tarefas da versao 1 ja sairam, porque os scripts antigos ainda leem o arquivo).
 """
 
 import json
@@ -16,6 +17,13 @@ _log = log.logger("migracao")
 
 def _ler(p):
     return json.loads(p.read_text(encoding="utf-8-sig")) if p.exists() else {}
+
+
+def _tarefas_v1():
+    import subprocess
+    from inatel_sync.core.agendador import LEGADO, SEM_JANELA
+    return any(subprocess.run(["schtasks", "/query", "/tn", "\\" + n], capture_output=True,
+                              creationflags=SEM_JANELA).returncode == 0 for n in LEGADO)
 
 
 def importar_v1(pasta):
@@ -50,8 +58,12 @@ def importar_v1(pasta):
     token = pasta / "token.json"
     if token.exists():
         segredos.gravar(segredos.GOOGLE, "token", token.read_text(encoding="utf-8"))
-        token.rename(token.with_name("token.json.migrado"))
-        _log.info("Token do Google movido para o Gerenciador de Credenciais (token.json -> token.json.migrado)")
+        if _tarefas_v1():
+            _log.info("Token do Google copiado para o Gerenciador de Credenciais; token.json fica enquanto as "
+                      "tarefas da versao 1 existirem (rode: inatel-sync agendar --migrar-legado)")
+        else:
+            token.rename(token.with_name("token.json.migrado"))
+            _log.info("Token do Google movido para o Gerenciador de Credenciais (token.json -> token.json.migrado)")
     elif not segredos.ler(segredos.GOOGLE, "token"):
         _log.warning("Sem token do Google; rode: inatel-sync auth")
 

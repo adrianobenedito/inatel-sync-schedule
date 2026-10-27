@@ -21,7 +21,7 @@ copy /y "%AQUI%uninstall.cmd" "%PROG%\uninstall.cmd" >nul || goto :erro
 
 echo Baixando o Python e as bibliotecas (precisa de internet; 1 a 3 minutos na primeira vez)...
 for %%W in ("%AQUI%pacote\inatel_sync-*.whl") do set "RODA=%%~fW"
-"%PROG%\bin\uv.exe" tool install --quiet --force --python 3.12 --managed-python "%RODA%" || goto :erro
+"%PROG%\bin\uv.exe" tool install --quiet --force --reinstall --python 3.12 --managed-python "%RODA%" || goto :erro
 
 rem PATH do usuario, so se ainda nao tiver (INATEL_SYNC_TESTE: instalacao de teste nao mexe no PATH real)
 if not defined INATEL_SYNC_TESTE powershell -NoProfile -Command "$p=[Environment]::GetEnvironmentVariable('Path','User'); $b='%PROG%\bin'; if (($p -split ';') -notcontains $b) { [Environment]::SetEnvironmentVariable('Path', ($(if ($p) { $p.TrimEnd(';') + ';' }) + $b), 'User') }"
