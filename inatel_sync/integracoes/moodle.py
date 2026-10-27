@@ -95,7 +95,7 @@ def eventos_do_ics(texto, prefixo, local, cor):
         fim = quando(ev["DTEND"]) if "DTEND" in ev else inicio
         e = Evento(
             chave=prefixo + ev.get("UID", ("", titulo + str(inicio)))[1],
-            titulo=f"{re.split(r' - | [(]', curso)[0]}: {titulo}" if curso else titulo,  # "S05: ...", "C07B: ..."
+            titulo=f"{re.split(r' - | [(]', curso)[0]}: {titulo}" if curso else titulo,  # "X33: ...", "X22B: ..."
             dia=inicio if isinstance(inicio, dt.date) and not isinstance(inicio, dt.datetime) else inicio.date(),
             local=local, descricao=descricao, lembretes=list(LEMBRETES), cor=cor,
         )

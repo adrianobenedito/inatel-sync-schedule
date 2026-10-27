@@ -1,6 +1,8 @@
 # segredos, estado e logs: nunca no repositorio (repo publico)
 client_secret.json
 token.json
+token.json.*
+*.migrado
 config.json
 config.toml
 state.json

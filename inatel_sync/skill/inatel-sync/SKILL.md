@@ -31,8 +31,8 @@ usuário (a mensagem diz o comando), 1 = erro inesperado, 3 = sem internet.
 
 ```
 inatel-sync agenda add --titulo "Reunião do TCC" --inicio "2026-11-10 14:00" --fim "2026-11-10 15:00" --lembrete 30
-inatel-sync agenda add --titulo "Entrega relatório" --data 2026-11-12 --chave relatorio-s05 --agenda Inatel
-inatel-sync agenda remove --chave relatorio-s05 --agenda Inatel
+inatel-sync agenda add --titulo "Entrega relatório" --data 2026-11-12 --chave relatorio-tcc --agenda Inatel
+inatel-sync agenda remove --chave relatorio-tcc --agenda Inatel
 ```
 
 - `--data` = dia inteiro; `--inicio/--fim` = com horário (fim padrão: 1 h depois). `--ate` = último dia
@@ -44,10 +44,10 @@ inatel-sync agenda remove --chave relatorio-s05 --agenda Inatel
 ## Google Tasks
 
 ```
-inatel-sync tarefas add --titulo "Estudar para P1 de S05" --data 2026-11-08 --chave p1-s05
+inatel-sync tarefas add --titulo "Estudar para P1 de calculo" --data 2026-11-08 --chave p1-calculo
 inatel-sync tarefas list
-inatel-sync tarefas done --chave p1-s05
-inatel-sync tarefas remove --chave p1-s05
+inatel-sync tarefas done --chave p1-calculo
+inatel-sync tarefas remove --chave p1-calculo
 ```
 
 Compromisso com horário vai na agenda, não no Tasks.

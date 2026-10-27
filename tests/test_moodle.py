@@ -12,7 +12,7 @@ from inatel_sync.integracoes import moodle as M
 ICS = (
     "BEGIN:VCALENDAR\r\nVERSION:2.0\r\n"
     "BEGIN:VEVENT\r\nUID:1@moodle\r\nSUMMARY:Lista 3 &amp; 4 est\\, marcado(a) vence\r\n"
-    "CATEGORIES:S05 - Interface Homem-Maquina\r\nDESCRIPTION:linha 1\\nlinha 2 com texto mui\r\n to longo\r\n"
+    "CATEGORIES:X33 - Disciplina Exemplo\r\nDESCRIPTION:linha 1\\nlinha 2 com texto mui\r\n to longo\r\n"
     "DTSTART:20261110T025900Z\r\nDTEND:20261110T025900Z\r\nEND:VEVENT\r\n"
     "BEGIN:VEVENT\r\nUID:2@moodle\r\nSUMMARY:Semana de provas\r\nDTSTART;VALUE=DATE:20261116\r\n"
     "DTEND;VALUE=DATE:20261121\r\nEND:VEVENT\r\n"
@@ -25,7 +25,7 @@ ICS = (
 def test_parse_ics():
     evs = {e.chave: e for e in M.eventos_do_ics(ICS, "moodle|", "Moodle", "6")}
     prazo = evs["moodle|1@moodle"]
-    assert prazo.titulo == "S05: Lista 3 & 4 est, marcado(a)"  # &amp; e \, desescapados; "vence" removido
+    assert prazo.titulo == "X33: Lista 3 & 4 est, marcado(a)"  # &amp; e \, desescapados; "vence" removido
     assert prazo.fim == dt.datetime(2026, 11, 9, 23, 59, tzinfo=prazo.fim.tzinfo)  # 02:59Z = 23:59 em SP
     assert prazo.fim - prazo.inicio == M.DURACAO_PRAZO and prazo.dia == dt.date(2026, 11, 9)
     assert "linha 1\nlinha 2 com texto muito longo" in prazo.descricao  # linha continuada desdobrada
